@@ -15,7 +15,8 @@ public class DualSound {
     // 자(字)를 입력 받아 두음법칙에 해당되든 안 되든 charResult에 저장
     public void checkWord(char in) {
         originalChar = in;
-        int result = originalChar;
+        int result = in;
+        charResult = in;
         int cons2 = (in - 44032) % 588 % 28;
         int vowel = (in - cons2 - 44032) % 588 / 28;
         int cons1 = (in - 44032 - cons2 - vowel*28) / 588; // wrong value
@@ -32,7 +33,7 @@ public class DualSound {
     }
 
     public boolean isApplied() {
-        return originalChar == charResult;
+        return originalChar != charResult;
     }
 
     public char getCharResult() {

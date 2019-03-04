@@ -3,20 +3,25 @@
 
 class Player {
     private String name;
-    private int[] wordList;
+    private String[] wordList;
     private int count; // word count
     private int round; // round number
     private boolean alive;
+    public static int global_count;
+    public static String[] global_wordList;
 
     public Player(String playerName) {
         name = playerName;
         wordList = new String[5000];
         count = 0;
+        global_count = 0;
+        global_wordList = new String[100000000];
         alive = true;
     }
 
     public void inputWord(String in) {
         wordList[count++] = in;
+        global_wordList[global_count++] = in;
     }
 
     public boolean toggleAlive() {
@@ -36,9 +41,6 @@ class Player {
         return name;
     }
 
-    public String[] getWordList() {
-        return wordList;
-    }
 }
 
 public class ShiritoriGame {
@@ -104,17 +106,26 @@ public class ShiritoriGame {
     }
 
     public boolean isValid(String in) {
-        String lastWord = player[lastPlayerIndex].getLastWord();
-        char firstChar = in.charAt(0);
+        char currentChar = in.charAt(0);
+        String lastWord = Player.global_wordList[Player.global_count-1]; // fucking hacked so hard.
+        // i'm lazy as fuck so i'm not going to test last player index and shit. ain't gonna
+        // fix it 'til it's broke
+
         char lastChar = lastWord.charAt(lastWord.length()-1);
+
         dSoundRule.checkWord(lastChar);
-        //System.out.println(dSoundRule.getCharResult());
-    
-        if (dualSoundRule && (dSoundRule.getCharResult() != firstChar && dSoundRule.getOriginalChar() != firstChar)) return false;
-        else if (lastChar != firstChar) return false; // backwardShiritoriRule = false인 경우에만
-        if (words.length > 0) for (String str : words) if (in.equals(str)) return false;
-        return true;
+
+            if (dualSoundRule) {
+                if (dSoundRule.getCharResult() != currentChar && 
+                    dSoundRule.getOriginalChar() != currentChar)
+                    return false;
+            } else {
+                if (lastChar != currentChar) return false;
+            }
+            // TODO: if not in dictionary, return false;
+            return true;
     }
+
 
     // 사전조건: isValid == true
     public void playTurn(String in, int id) {
@@ -163,5 +174,15 @@ public class ShiritoriGame {
             }
         }
         return -1;
+    }
+
+    public static String[] getGlobalWordList() {
+        return Player.global_wordList;
+    }
+
+    public static void fuckit() {
+        for (int i=0; i<Player.global_count; i++) {
+            System.out.print(Player.global_wordList[i] + ",");
+        }
     }
 }

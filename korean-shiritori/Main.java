@@ -31,6 +31,7 @@ public class Main {
             long currentTime = System.currentTimeMillis();
             long timeElapsed = currentTime - startTime;
             while (timeElapsed < sec*1000) {
+                //ShiritoriGame.fuckit();
                 word = scan.nextLine();
                 if (word.equals("\"종료\"")) break;
                 if (game.isValid(word))  break; 
